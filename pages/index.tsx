@@ -11,7 +11,6 @@ export default function Home() {
       <div>
         <h2>Welcome to Trail Tracks, a simple way to keep track of the trails that are on your bucket list!</h2>
         <Link href="/dashboard">Dashboard</Link>
-        
       </div>
     </div>
   )

@@ -3,23 +3,31 @@ import { useState } from 'react';
 import {type Data} from '../pages/dashboard'
 
 export default function GoogleMap({hikeData}){
-  console.log(hikeData);
+
     const [coordinates, setCoordinates] = useState({ lat: 59.95, lng: 30.33 });
     const [selectedCategory, setSelectedCategory] = useState('all');
 
+    
     const defaultProps = {
         center: {
-          lat: 34.0522,
-          lng: -118.2437,
+          lat: 0,
+          lng: 0
         },
-        zoom: 11,
+        zoom: 5,
       };
 
+      if(hikeData){
+        console.log(hikeData[0].lat);
+        defaultProps.center.lat = hikeData[0].lat
+        defaultProps.center.lng = hikeData[0].lng
+      }
+      
       const MapMarker = ({ lat, lng, text }) => <img className='pin' src='https://upload.wikimedia.org/wikipedia/commons/d/d1/Google_Maps_pin.svg'/>;
       
   return (
     <>
-    <div style={{ height: "50vh", width: "50%"}}>
+    {hikeData &&
+    <div className='googMap'>
       <GoogleMapReact
         bootstrapURLKeys={{ key: "AIzaSyDbpdCeI3KAZTAnsn6GccXRuLX8DrpoYrY" }}
         defaultCenter={defaultProps.center}
@@ -46,7 +54,7 @@ export default function GoogleMap({hikeData}){
       </GoogleMapReact>
     </div>
 
-    
+}
     </>
 
   )

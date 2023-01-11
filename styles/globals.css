@@ -1,12 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap');
+
 body {
   display: flex;
   flex-direction: column;
-  background-color: rgb(230, 230, 230)
+  /* background-color: rgb(69, 48, 7); */
+  background-image: url('https://cdn.pixabay.com/photo/2020/12/21/19/01/trees-5850624_960_720.jpg');
+  background-size: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  font-family: 'Oswald', sans-serif;
 }
 
 .map {
   height: 50%;
   width: 50%;
+}
+
+.googMap {
+  height: 50vh;
+  width: 50%;
+  border: 20px solid rgba(0, 0, 0, 0.55);
+  margin: 20px;
+  border-radius: 15px;
+  box-shadow: 5px 5px 8px 2px rgba(0, 0, 0, 0.2);
 }
 
 .pin {
@@ -23,22 +39,22 @@ body {
   padding: 0;
 }
 
-/* #MapWrapper {} */
-
 .hikesList {
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 5px;
-  right: 100px;
+  right: 60px;
+  top: 0px;
+  margin-top: 80px;
   background-color: beige;
   width: 400px;
   height: auto;
-  /* justify-content: center; */
   text-align: center;
-  /* padding: 10px; */
-  border: 3px solid black;
+  border: 20px solid rgba(0, 0, 0, 0.1);
   border-radius: 10px;
+  max-height: 550px;
+  overflow-y: scroll;
+  box-shadow: 5px 5px 8px 2px rgba(0, 0, 0, 0.2);
 }
 
 .line {
@@ -82,4 +98,42 @@ li {
 
 .landingpage-cont h1 {
   font-size: 100px;
+}
+
+.form {
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.dash-header {
+  text-align: center;
+  font-size: 60px;
+}
+
+.category {
+  display: flex;
+  justify-content: start;
+  padding-left: 25px;
+}
+
+.form {
+  display: grid;
+  border-radius: 10px;
+  grid-template-columns: repeat(5, auto);
+  grid-template-rows: repeat(2, auto);
+}
+
+.submit-hike {
+  width: 55px;
+  background-color: lightgreen;
+}
+
+.submit-hike:hover {
+  background-color: green;
+  height: 30px;
+  width: 60px;
+  transition: 0.7s;
 }

@@ -1,7 +1,7 @@
 function CategoryList(data: any) {
     return (
         <div>
-            <h1>Category List</h1>
+            <h1 className='category'>Category List</h1>
         </div>
     )
 }

@@ -1,19 +1,21 @@
-// import axios from "axios";
+import axios from "axios";
 
-function HikesList({hikeData, setHikeData}) {
+function HikesList({hikeData, mutate}) {
 
-    // const checkIfDone = (bool) => {
-    //     return bool ? "green" : "beige";
-    // }
+    //delete hike onClick function
     async function deleteHike(id) {
-        axios.delete(`http://127.0.0.1:8090/api/collections/hikes/records/${id}`)
-            .then(res => setHikeData(res.data.items))
+        await axios.delete(`http://127.0.0.1:8090/api/collections/hikes/records/${id}`)
+        mutate();
     }
-
-    // function updateHike(){
-  //   axios.patch(`http://127.0.0.1:8090/api/collections/hikes/records/'${id}')`)
-  //   .then(res => setHikeData(res.data.items))
-  // }
+/*
+    function updateHike(id){
+        const [checkIfCompleted, setCheckIfCompleted] = useState(false)
+        axios.put(`http://127.0.0.1:8090/api/collections/hikes/records/${id})`,
+  {
+    completed: checkIfCompleted
+  })
+    }
+*/
 
     return (
         <div className="hikesList">
@@ -32,7 +34,8 @@ function HikesList({hikeData, setHikeData}) {
                                 <h4>{hike.location}</h4>
                             </div>
                             <p>{hike.note}</p>
-                            <button onClick={deleteHike(hike._id)}>Delete Hike</button>
+                            <button onClick={() => deleteHike(hike.id)}>Delete Hike</button>
+                            {/* <button onClick={() => updateHike(hike.id)}>Mark as Completed</button> */}
                         </li>
                         </>
                     )

@@ -18,72 +18,78 @@ export type Data = {
   completed: boolean;
 }
 
-
-
 const fetcher = url => axios.get(url).then(res => res.data.items)
 
-// const data: Data[]= [
-//   { id: 1, name: 'Rattlesnake Trail', note: 'This is a great trail', lat: 45.5231, lng: -122.6765, location:"Snoqualmie, WA", category: 'PNW', completed: false},
-//   { id: 2, name: 'Goat Lake', note: 'This is an AMAZING trail', lat: 47.426577, lng: -121.662982, location:"Seattle, WA", category: 'PNW', completed: true },
-//   { id: 3, name: 'Mount Si', note: 'This is a cool trail', lat: 47.5215, lng: -121.8265, location:"Los Angles, CA", category: 'PNW', completed: false }, 
-// ]
-
-
-
  function Dashboard() {
+  const [formName, setFormName] = useState("")
+  const [formNote, setFormNote] = useState("")
+  const [formLat, setFormLat] = useState(0)
+  const [formLng, setFormLng] = useState(0)
+  const [formLocation, setFormLocation] = useState("")
+  const [formCategory, setFormCategory] = useState("")
+  const [formCompleted, setFormCompleted] = useState(false)
+  const [formDistance, setFormDistance] = useState(0)
 
-  const { data:userData, error:userDataError } = useSWR('http://127.0.0.1:8090/api/collections/user/records/', fetcher)
-  const [hikeData, setHikeData] = useState([{}])
 
- useEffect(() => {
-    if(userData) axios.get(`http://127.0.0.1:8090/api/collections/hikes/records/?filter=(user='${userData[0]?.id}')`).then((res) => setHikeData(res.data.items))
-  }, [userData])
-  
-  function addHike(){
-    axios.post('http://127.0.0.1:8090/api/collections/hikes/records/',
+  const { data: user, error: userDataError } = useSWR('http://127.0.0.1:8090/api/collections/user/records/', fetcher)
+  const { data: hikeData, error: hikeDataError, mutate } = useSWR(()=> `http://127.0.0.1:8090/api/collections/hikes/records/?filter=(user='${user[0]?.id}')`, fetcher)
+
+  // const [hikeData, setHikeData] = useState([{}])
+
+  async function addHike(e){
+    e.preventDefault();
+    
+    await axios.post('http://127.0.0.1:8090/api/collections/hikes/records/',
     { 
-      user: 'zj4v4azozzse0zj',
-      name: 'Goat Trail',
-      note: 'This is an AMAZING trail',
-      lat: 47.426577,
-      lng: -121.662982,
-      location:"Seattle, WA",
-      category: 'PNW',
-      completed: true,
-      distanc: 9
+      user:"zj4v4azozzse0zj",
+      name:formName,
+      note:formNote,
+      lat:formLat,
+      lng:formLng,
+      location:formLocation,
+      category:formCategory,
+      completed:formCompleted,
+      distance:formDistance
     })
-    .then((res) => res.data.items)
+    
+    setFormName("")
+    setFormNote("")
+    setFormLat(0)
+    setFormLng(0)
+    setFormLocation("")
+    setFormCategory("")
+    setFormCompleted(false)
+    setFormDistance(0)
+
+    mutate()
   }
 
-  // function deleteHike(){
-  //   axios.delete(`http://127.0.0.1:8090/api/collections/hikes/records/?filter=(user='${userData[0]?.id}')`)
-  //   .then((data) => {
-  //       setVerificationCode(data.data)
-  //   })
-  // }
-
-  // function updateHike(){
-  //   axios.patch(`http://127.0.0.1:8090/api/collections/hikes/records/?filter=(user='${userData[0]?.id}')`)
-  //   .then((data) => {
-  //       setVerificationCode(data.data)
-  //   })
-  // }
-
-  // function getAllHikes(){
-  //   axios.get('http://127.0.0.1:8090/api/collections/hikes/records/')
-  //   .then((data) => {
-  //       setVerificationCode(data.data)
-  //   })
-  // }
-
   return (
+    
     <>
-        <GoogleMap hikeData={hikeData} />
-        <CategoryList hikeData={hikeData} />
-        <HikesList hikeData={hikeData} setHikeData={setHikeData}/>
-        <button onClick={addHike}>Add Hike</button>
-        {/* <button onClick={deleteHike}>Delete Hike</button>
-        <button onClick={updateHike}>Mark Hike Completed</button> */}
+        {(userDataError || hikeDataError) && <div>failed to load</div>}
+        {!(userDataError || hikeDataError) && 
+        <>
+          <h1 className='dash-header'>Trail Tracks</h1>
+          <GoogleMap hikeData={hikeData} />
+          <CategoryList hikeData={hikeData} />
+          <HikesList hikeData={hikeData} mutate={mutate}/>
+          <div className='input-hike'>
+            <form className='form' onSubmit={(e) => addHike(e)}>
+              <input type="text" placeholder="Hike Name" value={formName} onChange={(e)=>setFormName(e.target.value)}/>
+              <input type="text" placeholder="Note" value={formNote} onChange={(e)=>setFormNote(e.target.value)}/>
+              <input type="number" placeholder="Lat" value={formLat} onChange={(e)=>setFormLat(parseInt(e.target.value))}/>
+              <input type="number" placeholder="Lng" value={formLng} onChange={(e)=>setFormLng(parseInt(e.target.value))}/>
+              <input type="text" placeholder="Location" value={formLocation} onChange={(e)=>setFormLocation(e.target.value)}/>
+              <input type="text" placeholder="Category" value={formCategory} onChange={(e)=>setFormCategory(e.target.value)}/>
+              <input type="number" placeholder="Distance" value={formDistance} onChange={(e)=>setFormDistance(parseInt(e.target.value))}/>
+              <span style={{color: "white"}}>Completed? <input type="checkbox" id="completed" checked={formCompleted} onChange={()=>setFormCompleted((c)=> !c)}/></span>
+              <button className='submit-hike' type="submit">submit</button>
+            </form>
+          </div>
+         
+        </>
+        }
     </>
   )
 }
